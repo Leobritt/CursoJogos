@@ -3,10 +3,12 @@ package br.com.mariojp.game;
 public class Inimigo extends Sprite {
 
 	private int initX;
-	
+	private IMovimento movimento;
+
 	public Inimigo(int x, int y) {
 		super(x, y);
 		this.initX = x;
+		movimento = new MovimentoInimigo();
 		initInimigo();
 	}
 
@@ -16,10 +18,15 @@ public class Inimigo extends Sprite {
 	}
 
 	public void move() {
-		if (x < 0) {
-			x = initX;
-		}
-		x -= 1;
+		movimento.move(this);
+	}
+
+	public int getInitX() {
+		return initX;
+	}
+
+	public void setInitX(int initX) {
+		this.initX = initX;
 	}
 
 }

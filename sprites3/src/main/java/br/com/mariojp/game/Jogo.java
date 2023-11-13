@@ -47,7 +47,9 @@ public class Jogo extends JPanel implements ActionListener {
 		setBackground(Color.BLACK);
 		setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
 		setDoubleBuffered(true);
+		// nave = new Nave(40, 60, B_WIDTH);
 		nave = new Nave(40, 60, B_WIDTH);
+
 
 		timer = new Timer(DELAY, this);
 		timer.start();
@@ -153,7 +155,6 @@ public class Jogo extends JPanel implements ActionListener {
 				inimigos.remove(inimigo);
 			}
 		}
-
 	}
 
 	private void stopGame() {
