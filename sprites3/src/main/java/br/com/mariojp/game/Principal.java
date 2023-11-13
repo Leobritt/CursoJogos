@@ -6,9 +6,7 @@ import javax.swing.JFrame;
 
 public class Principal extends JFrame {
 
-    /**
-	 * 
-	 */
+  
 	private static final long serialVersionUID = 1L;
 
 	public Principal() {
