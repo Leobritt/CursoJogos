@@ -28,6 +28,8 @@ public class Jogo extends JPanel implements ActionListener {
 
 	private ArrayList<Inimigo> inimigos = new ArrayList<Inimigo>();
 
+	private ArrayList<BossInimigo> bossInimigos = new ArrayList<BossInimigo>();
+
 	private Random random = new Random();
 
 	private boolean endgame = false;
@@ -49,7 +51,6 @@ public class Jogo extends JPanel implements ActionListener {
 		setDoubleBuffered(true);
 		// nave = new Nave(40, 60, B_WIDTH);
 		nave = new Nave(40, 60, B_WIDTH);
-
 
 		timer = new Timer(DELAY, this);
 		timer.start();
@@ -134,8 +135,20 @@ public class Jogo extends JPanel implements ActionListener {
 					m.setVisible(false);
 					alien.setVisible(false);
 					score++;
-					if(score > 10) {
-						endgame = true;
+					if (score == 20) {
+						// FIXME: não está instanciando oq fzr?
+						BossInimigo boss = new BossInimigo(B_WIDTH, random.nextInt(B_HEIGHT - 20) + 10);
+						bossInimigos.add(boss);
+						for (int i = 0; i < bossInimigos.size(); i++) {
+							BossInimigo chefe = bossInimigos.get(i);
+							if (chefe.isVisible()) {
+								chefe.move();
+								System.out.println("chegay");
+							} else {
+								inimigos.remove(chefe);
+							}
+						}
+
 					}
 				}
 			}
