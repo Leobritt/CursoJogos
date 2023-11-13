@@ -89,6 +89,13 @@ public class Jogo extends JPanel implements ActionListener {
 				g.drawImage(i.getImage(), i.getX(), i.getY(), this);
 			}
 		}
+
+		for (BossInimigo i : bossInimigos) {
+			if (i.isVisible()) {
+				System.out.println("testes");
+				g.drawImage(i.getImage(), i.getX(), i.getY(), this);
+			}
+		}
 		g.setColor(Color.WHITE);
 		g.drawString("PONTOS : " + score, 5, 15);
 
@@ -112,6 +119,7 @@ public class Jogo extends JPanel implements ActionListener {
 		updateNave();
 		updateMissiles();
 		updateInimigo();
+		updateInimigoBoss();
 		checkCollisions();
 		repaint();
 	}
@@ -137,20 +145,25 @@ public class Jogo extends JPanel implements ActionListener {
 					score++;
 					if (score == 20) {
 						// FIXME: não está instanciando oq fzr?
-						BossInimigo boss = new BossInimigo(B_WIDTH, random.nextInt(B_HEIGHT - 20) + 10);
-						bossInimigos.add(boss);
-						for (int i = 0; i < bossInimigos.size(); i++) {
-							BossInimigo chefe = bossInimigos.get(i);
-							if (chefe.isVisible()) {
-								chefe.move();
-								System.out.println("chegay");
-							} else {
-								inimigos.remove(chefe);
-							}
-						}
-
+						updateInimigoBoss();
 					}
 				}
+			}
+		}
+	}
+
+	private void updateInimigoBoss() {
+		// while (bossInimigos.size() < 5) {
+			bossInimigos.add(new BossInimigo(B_WIDTH, random.nextInt(B_HEIGHT - 20) + 10));
+		// }
+		
+		for (int i = 0; i < bossInimigos.size(); i++) {
+			BossInimigo chefe = bossInimigos.get(i);
+			if (chefe.isVisible()) {
+				chefe.move();
+				System.out.println("chegay");
+			} else {
+				bossInimigos.remove(chefe);
 			}
 		}
 	}
