@@ -117,11 +117,18 @@ public class Jogo extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		stopGame();
 		updateNave();
+		//updateInimigoBoss();
+		if (score == 3) {
+			//endgame = true;
+			updateInimigoBoss();
+			
+		}
+		checkCollisionsBoss();
 		updateMissiles();
 		updateInimigo();
-		updateInimigoBoss();
 		checkCollisions();
 		repaint();
+
 	}
 
 	public void checkCollisions() {
@@ -151,22 +158,46 @@ public class Jogo extends JPanel implements ActionListener {
 			}
 		}
 	}
-
-	private void updateInimigoBoss() {
-		 while (bossInimigos.size() < 1) {
-			bossInimigos.add(new BossInimigo(B_WIDTH, random.nextInt(B_HEIGHT - 20) + 10));
-		 }
-		
-		for (int i = 0; i < bossInimigos.size(); i++) {
-			BossInimigo chefe = bossInimigos.get(i);
-			if (chefe.isVisible()) {
-				chefe.move();
-				System.out.println("chegay");
-			} else {
-				bossInimigos.remove(chefe);
+	public void checkCollisionsBoss() {
+		Rectangle r3 = nave.getBounds();
+		for (BossInimigo boss : bossInimigos) {
+			Rectangle r2 = boss.getBounds();
+			if (r3.intersects(r2)) {
+				boss.setVisible(false);
+				boss.setVisible(false);
+				endgame = true;
+			}
+		}
+		ArrayList<Missil> ms = nave.getMissiles();
+		for (Missil m : ms) {
+			Rectangle r1 = m.getBounds();
+			for (BossInimigo boss : bossInimigos) {
+				Rectangle r2 = boss.getBounds();
+				if (r1.intersects(r2)) {
+					m.setVisible(false);
+					boss.setVisible(false);
+					score++;
+					if (score == 10) {
+						//endgame = true;
+					}
+				}
 			}
 		}
 	}
+	private void updateInimigoBoss() {
+		while (bossInimigos.size() <1) {
+		 bossInimigos.add(new BossInimigo(B_WIDTH, random.nextInt(B_HEIGHT - 20) + 10));
+	 }
+	 
+	 for (int i = 0; i < bossInimigos.size(); i++) {
+		 BossInimigo chefe = bossInimigos.get(i);
+		 if (chefe.isVisible()) {
+			 chefe.move();
+		 } else {
+			 bossInimigos.remove(chefe);
+		 }
+	 }
+ }
 
 	private void updateInimigo() {
 		while (inimigos.size() < 5) {
