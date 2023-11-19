@@ -5,10 +5,10 @@ public class MovimentoBoss implements IMovimento {
     
     // Constantes para limites e velocidades
     private static final int LIMITE_ESQUERDO = 0;
-    private static final int LIMITE_SUPERIOR = 0;
-    private static final int LIMITE_INFERIOR = 600;
+    private static final int LIMITE_SUPERIOR = 600;
+    private static final int LIMITE_INFERIOR = 0;
     private static final int VELOCIDADE_HORIZONTAL = 2;
-    private static final int VELOCIDADE_VERTICAL = 3;
+    private static final int VELOCIDADE_VERTICAL = 2;
 
     // Variável para controlar se o boss está se movendo para cima ou para baixo
     private boolean subindo = true;
@@ -19,7 +19,7 @@ public class MovimentoBoss implements IMovimento {
     @Override
     public void move(Sprite enemy) {
         // Verifica se atingiu o limite esquerdo
-        if (enemy.x < LIMITE_ESQUERDO) {
+        if (enemy.x == LIMITE_ESQUERDO) {
             // Se atingiu, reposiciona em um lugar aleatório
             resetPosicao(enemy);
         }
@@ -35,21 +35,21 @@ public class MovimentoBoss implements IMovimento {
     private void resetPosicao(Sprite enemy) {
         // Reposiciona em um lugar aleatório na vertical
         enemy.x = 800; // Reinicia na borda direita
-        enemy.y = random.nextInt(LIMITE_INFERIOR - LIMITE_SUPERIOR) + LIMITE_SUPERIOR;
+        enemy.y = 300;
     }
 
     // Método para controlar o movimento vertical do boss
     private void moveVertical(Sprite enemy) {
-        if (subindo && enemy.y > LIMITE_SUPERIOR) {
+        if (subindo && enemy.y < LIMITE_SUPERIOR) {
             // Se está subindo e não atingiu o limite superior, move para cima
-            enemy.y -= VELOCIDADE_VERTICAL;
+            enemy.y += VELOCIDADE_VERTICAL;
         } else {
             // Se atingiu o limite superior, inverte a direção para descer
             subindo = false;
 
-            if (enemy.y < LIMITE_INFERIOR) {
+            if (enemy.y > LIMITE_INFERIOR) {
                 // Se está descendo e não atingiu o limite inferior, move para baixo
-                enemy.y += VELOCIDADE_VERTICAL;
+                enemy.y -= VELOCIDADE_VERTICAL;
             } else {
                 // Se atingiu o limite inferior, inverte a direção para subir
                 subindo = true;
