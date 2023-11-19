@@ -12,10 +12,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
+import java.util.function.Supplier;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import br.com.mariojp.game.entities.Missil;
+import br.com.mariojp.game.entities.Nave;
+import br.com.mariojp.game.entities.inimigo.BossInimigo;
+import br.com.mariojp.game.entities.inimigo.Inimigo;
+import br.com.mariojp.game.entities.inimigo.InimigoAbstract;
 
 public class Jogo extends JPanel implements ActionListener {
 
@@ -26,9 +35,9 @@ public class Jogo extends JPanel implements ActionListener {
 
 	private int score = 0;
 
-	private ArrayList<Inimigo> inimigos = new ArrayList<Inimigo>();
+	private ArrayList<InimigoAbstract> inimigos = new ArrayList<>();
 
-	private ArrayList<BossInimigo> bossInimigos = new ArrayList<BossInimigo>();
+	private ArrayList<InimigoAbstract> bossInimigos = new ArrayList<>();
 
 	private Random random = new Random();
 
@@ -49,7 +58,6 @@ public class Jogo extends JPanel implements ActionListener {
 		setBackground(Color.BLACK);
 		setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
 		setDoubleBuffered(true);
-		// nave = new Nave(40, 60, B_WIDTH);
 		nave = new Nave(40, 60, B_WIDTH);
 
 		timer = new Timer(DELAY, this);
@@ -84,13 +92,13 @@ public class Jogo extends JPanel implements ActionListener {
 				g.drawImage(m.getImage(), m.getX(), m.getY(), this);
 			}
 		}
-		for (Inimigo i : inimigos) {
+		for (InimigoAbstract i : inimigos) {
 			if (i.isVisible()) {
 				g.drawImage(i.getImage(), i.getX(), i.getY(), this);
 			}
 		}
 
-		for (BossInimigo i : bossInimigos) {
+		for (InimigoAbstract i : bossInimigos) {
 			if (i.isVisible()) {
 				g.drawImage(i.getImage(), i.getX(), i.getY(), this);
 			}
@@ -114,105 +122,68 @@ public class Jogo extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
 		stopGame();
 		updateNave();
-		// updateInimigoBoss();
+
 		if (score == 3) {
 			// endgame = true;
-			updateInimigoBoss();
-
+			updateInimigo(bossInimigos, () -> new BossInimigo(B_WIDTH, random.nextInt(B_HEIGHT - 20) + 10), 1);
 		}
-		checkCollisionsBoss();
+
+		checkCollisions(bossInimigos, true);
 		updateMissiles();
-		updateInimigo();
-		checkCollisions();
+		updateInimigo(inimigos, () -> new Inimigo(B_WIDTH, random.nextInt(B_HEIGHT - 20) + 10), 5);
+		checkCollisions(inimigos, false);
 		repaint();
-
 	}
 
-	public void checkCollisions() {
+	public <T extends InimigoAbstract> void checkCollisions(List<T> inimigosList, boolean isBoss) {
 		Rectangle r3 = nave.getBounds();
-		for (Inimigo alien : inimigos) {
-			Rectangle r2 = alien.getBounds();
+		for (T inimigo : inimigosList) {
+			Rectangle r2 = inimigo.getBounds();
 			if (r3.intersects(r2)) {
-				nave.setVisible(false);
-				alien.setVisible(false);
-				endgame = true;
+				inimigo.setVisible(false);
+				if (isBoss) {
+					endgame = true;
+				} else {
+					nave.setVisible(false);
+					endgame = true;
+				}
 			}
 		}
+
 		ArrayList<Missil> ms = nave.getMissiles();
 		for (Missil m : ms) {
 			Rectangle r1 = m.getBounds();
-			for (Inimigo alien : inimigos) {
-				Rectangle r2 = alien.getBounds();
+			for (T inimigo : inimigosList) {
+				Rectangle r2 = inimigo.getBounds();
 				if (r1.intersects(r2)) {
 					m.setVisible(false);
-					alien.setVisible(false);
+					inimigo.setVisible(false);
 					score++;
-					if (score == 20) {
-						// FIXME: não está instanciando oq fzr?
-						updateInimigoBoss();
-					}
 				}
 			}
 		}
 	}
 
-	public void checkCollisionsBoss() {
-		Rectangle r3 = nave.getBounds();
-		for (BossInimigo boss : bossInimigos) {
-			Rectangle r2 = boss.getBounds();
-			if (r3.intersects(r2)) {
-				boss.setVisible(false);
-				boss.setVisible(false);
-				endgame = true;
-			}
-		}
-		ArrayList<Missil> ms = nave.getMissiles();
-		for (Missil m : ms) {
-			Rectangle r1 = m.getBounds();
-			for (BossInimigo boss : bossInimigos) {
-				Rectangle r2 = boss.getBounds();
-				if (r1.intersects(r2)) {
-					m.setVisible(false);
-					boss.setVisible(false);
-					score++;
-					if (score == 10) {
-						// endgame = true;
-					}
-				}
-			}
-		}
-	}
-
-	private void updateInimigoBoss() {
-		while (bossInimigos.size() < 1) {
-			bossInimigos.add(new BossInimigo(B_WIDTH, random.nextInt(B_HEIGHT - 20) + 10));
-		}
-
-		for (int i = 0; i < bossInimigos.size(); i++) {
-			BossInimigo chefe = bossInimigos.get(i);
-			if (chefe.isVisible()) {
-				chefe.move();
-			} else {
-				bossInimigos.remove(chefe);
-			}
-		}
-	}
-
-	private void updateInimigo() {
-		while (inimigos.size() < 5) {
-			inimigos.add(new Inimigo(B_WIDTH, random.nextInt(B_HEIGHT - 20) + 10));
-		}
-
-		for (int i = 0; i < inimigos.size(); i++) {
-			Inimigo inimigo = inimigos.get(i);
+	private <T extends InimigoAbstract> void movimentoInimigo(List<T> naves) {
+		ListIterator<T> iterator = naves.listIterator();
+		while (iterator.hasNext()) {
+			T inimigo = iterator.next();
 			if (inimigo.isVisible()) {
 				inimigo.move();
 			} else {
-				inimigos.remove(inimigo);
+				iterator.remove();
 			}
 		}
+	}
+
+	private <T extends InimigoAbstract> void updateInimigo(List<T> inimigosList, Supplier<T> inimigoSupplier, int qtd) {
+		while (inimigosList.size() < qtd) {
+			inimigosList.add(inimigoSupplier.get());
+		}
+		movimentoInimigo(inimigosList);
 	}
 
 	private void stopGame() {

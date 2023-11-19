@@ -1,6 +1,8 @@
 package br.com.mariojp.game;
 import java.util.Random;
 
+import br.com.mariojp.game.entities.Sprite;
+
 public class MovimentoBoss implements IMovimento {
     
     // Constantes para limites e velocidades

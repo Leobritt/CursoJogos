@@ -1,4 +1,4 @@
-package br.com.mariojp.game;
+package br.com.mariojp.game.entities;
 
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -6,13 +6,13 @@ import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 
 public class Sprite {
-	protected int x;
-	protected int y;
-	protected int width;
-	protected int height;
-	protected boolean visibilty;
+	public int x;
+	public int y;
+	public int width;
+	public int height;
+	public boolean visibilty;
 
-	protected Image image;
+	public Image image;
 
 	public Sprite(int x, int y) {
 		this.x = x;
@@ -20,7 +20,7 @@ public class Sprite {
 		visibilty = true;
 	}
 
-	protected void carregarImagem(String imageName) {
+	public void carregarImagem(String imageName) {
 		ImageIcon ii = new ImageIcon(this.getClass().getResource(imageName));
 		image = ii.getImage();
 	}

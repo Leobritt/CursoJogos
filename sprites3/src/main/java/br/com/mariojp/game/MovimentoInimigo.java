@@ -1,5 +1,7 @@
 package br.com.mariojp.game;
 
+import br.com.mariojp.game.entities.Sprite;
+
 public class MovimentoInimigo implements IMovimento {
 
     @Override

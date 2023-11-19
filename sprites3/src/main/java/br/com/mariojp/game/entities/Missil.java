@@ -1,8 +1,7 @@
-package br.com.mariojp.game;
+package br.com.mariojp.game.entities;
 
 public class Missil extends Sprite{
 
-	
 	private final int MISSILE_SPEED = 2;
 	private int alcance;
 	
