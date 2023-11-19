@@ -92,7 +92,6 @@ public class Jogo extends JPanel implements ActionListener {
 
 		for (BossInimigo i : bossInimigos) {
 			if (i.isVisible()) {
-				System.out.println("testes");
 				g.drawImage(i.getImage(), i.getX(), i.getY(), this);
 			}
 		}
@@ -117,11 +116,11 @@ public class Jogo extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		stopGame();
 		updateNave();
-		//updateInimigoBoss();
+		// updateInimigoBoss();
 		if (score == 3) {
-			//endgame = true;
+			// endgame = true;
 			updateInimigoBoss();
-			
+
 		}
 		checkCollisionsBoss();
 		updateMissiles();
@@ -158,6 +157,7 @@ public class Jogo extends JPanel implements ActionListener {
 			}
 		}
 	}
+
 	public void checkCollisionsBoss() {
 		Rectangle r3 = nave.getBounds();
 		for (BossInimigo boss : bossInimigos) {
@@ -178,26 +178,27 @@ public class Jogo extends JPanel implements ActionListener {
 					boss.setVisible(false);
 					score++;
 					if (score == 10) {
-						//endgame = true;
+						// endgame = true;
 					}
 				}
 			}
 		}
 	}
+
 	private void updateInimigoBoss() {
-		while (bossInimigos.size() <1) {
-		 bossInimigos.add(new BossInimigo(B_WIDTH, random.nextInt(B_HEIGHT - 20) + 10));
-	 }
-	 
-	 for (int i = 0; i < bossInimigos.size(); i++) {
-		 BossInimigo chefe = bossInimigos.get(i);
-		 if (chefe.isVisible()) {
-			 chefe.move();
-		 } else {
-			 bossInimigos.remove(chefe);
-		 }
-	 }
- }
+		while (bossInimigos.size() < 1) {
+			bossInimigos.add(new BossInimigo(B_WIDTH, random.nextInt(B_HEIGHT - 20) + 10));
+		}
+
+		for (int i = 0; i < bossInimigos.size(); i++) {
+			BossInimigo chefe = bossInimigos.get(i);
+			if (chefe.isVisible()) {
+				chefe.move();
+			} else {
+				bossInimigos.remove(chefe);
+			}
+		}
+	}
 
 	private void updateInimigo() {
 		while (inimigos.size() < 5) {

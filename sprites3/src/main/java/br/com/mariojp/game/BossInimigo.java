@@ -13,7 +13,7 @@ public class BossInimigo extends Sprite {
 	}
 
 	private void initBoss() {
-		carregarImagem("/imagens/boss.jpg");
+		carregarImagem("/imagens/bossUp.png");
 		getImageDimensions();
 	}
 
