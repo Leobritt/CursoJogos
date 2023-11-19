@@ -153,9 +153,9 @@ public class Jogo extends JPanel implements ActionListener {
 	}
 
 	private void updateInimigoBoss() {
-		// while (bossInimigos.size() < 5) {
+		 while (bossInimigos.size() < 1) {
 			bossInimigos.add(new BossInimigo(B_WIDTH, random.nextInt(B_HEIGHT - 20) + 10));
-		// }
+		 }
 		
 		for (int i = 0; i < bossInimigos.size(); i++) {
 			BossInimigo chefe = bossInimigos.get(i);
